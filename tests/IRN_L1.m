@@ -3,15 +3,15 @@
 n = 100;
 m = 60;
 
-trials = 100;
+trials = 5;
 s_range = 1:1:40;
 errors = [];
 errorls = [];
 % FISTA Options, 
-options  = IRfista('defaults');
-options.shrink = 'on'; % Apply iterative shrinking
-options.RegParam = .08;% Inverse regularizer
+options  = IRirn('defaults');
 options.IterBar = 'off';
+options.FlatTol = 1e-12;
+
 
 % Test FISTA for various levels of sparsity
 for i = s_range
@@ -23,7 +23,7 @@ for i = s_range
         x = zeros(n,1);
         x(on) = rand(i,1);
         b = A * x;
-        x_rec = IRfista(A,b, options);
+        x_rec = IRirn(A,b, 20, options);
         x_ls = b\A;
         cummulative_error = cummulative_error + norm(x - x_rec)/norm(x);
         cummulative_ls = cummulative_ls + norm(x - x_ls)/norm(x);
